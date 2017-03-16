@@ -491,12 +491,12 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
       // hash next 3 bytes of data to be compressed
       int h = stbiw__zhash(data+i)&(stbiw__ZHASH-1), best=3;
       unsigned char *bestloc = 0;
-      unsigned char **hlist = hash_table[h];
-      int n = stbiw__sbcount(hlist);
+      unsigned char **hdarknet_list = hash_table[h];
+      int n = stbiw__sbcount(hdarknet_list);
       for (j=0; j < n; ++j) {
-         if (hlist[j]-data > i-32768) { // if entry lies within window
-            int d = stbiw__zlib_countm(hlist[j], data+i, data_len-i);
-            if (d >= best) best=d,bestloc=hlist[j];
+         if (hdarknet_list[j]-data > i-32768) { // if entry lies within window
+            int d = stbiw__zlib_countm(hdarknet_list[j], data+i, data_len-i);
+            if (d >= best) best=d,bestloc=hdarknet_list[j];
          }
       }
       // when hash table entry is too long, delete half the entries
@@ -509,11 +509,11 @@ unsigned char * stbi_zlib_compress(unsigned char *data, int data_len, int *out_l
       if (bestloc) {
          // "lazy matching" - check match at *next* byte, and if it's better, do cur byte as literal
          h = stbiw__zhash(data+i+1)&(stbiw__ZHASH-1);
-         hlist = hash_table[h];
-         n = stbiw__sbcount(hlist);
+         hdarknet_list = hash_table[h];
+         n = stbiw__sbcount(hdarknet_list);
          for (j=0; j < n; ++j) {
-            if (hlist[j]-data > i-32767) {
-               int e = stbiw__zlib_countm(hlist[j], data+i+1, data_len-i-1);
+            if (hdarknet_list[j]-data > i-32767) {
+               int e = stbiw__zlib_countm(hdarknet_list[j], data+i+1, data_len-i-1);
                if (e > best) { // if next match is better, bail on current match
                   bestloc = NULL;
                   break;

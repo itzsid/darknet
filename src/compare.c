@@ -20,9 +20,9 @@ void train_compare(char *cfgfile, char *weightfile)
     }
     printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
     int imgs = 1024;
-    list *plist = get_paths("data/compare.train.list");
-    char **paths = (char **)list_to_array(plist);
-    int N = plist->size;
+    darknet_list *pdarknet_list = get_paths("data/compare.train.darknet_list");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    int N = pdarknet_list->size;
     printf("%d\n", N);
     clock_t time;
     pthread_t load_thread;
@@ -73,8 +73,8 @@ void train_compare(char *cfgfile, char *weightfile)
     pthread_join(load_thread, 0);
     free_data(buffer);
     free_network(net);
-    free_ptrs((void**)paths, plist->size);
-    free_list(plist);
+    free_ptrs((void**)paths, pdarknet_list->size);
+    free_darknet_list(pdarknet_list);
     free(base);
 }
 
@@ -87,11 +87,11 @@ void validate_compare(char *filename, char *weightfile)
     }
     srand(time(0));
 
-    list *plist = get_paths("data/compare.val.list");
-    //list *plist = get_paths("data/compare.val.old");
-    char **paths = (char **)list_to_array(plist);
-    int N = plist->size/2;
-    free_list(plist);
+    darknet_list *pdarknet_list = get_paths("data/compare.val.darknet_list");
+    //darknet_list *pdarknet_list = get_paths("data/compare.val.old");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    int N = pdarknet_list->size/2;
+    free_darknet_list(pdarknet_list);
 
     clock_t time;
     int correct = 0;
@@ -234,11 +234,11 @@ void SortMaster3000(char *filename, char *weightfile)
     srand(time(0));
     set_batch_network(&net, 1);
 
-    list *plist = get_paths("data/compare.sort.list");
-    //list *plist = get_paths("data/compare.val.old");
-    char **paths = (char **)list_to_array(plist);
-    int N = plist->size;
-    free_list(plist);
+    darknet_list *pdarknet_list = get_paths("data/compare.sort.darknet_list");
+    //darknet_list *pdarknet_list = get_paths("data/compare.val.old");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    int N = pdarknet_list->size;
+    free_darknet_list(pdarknet_list);
     sortable_bbox *boxes = calloc(N, sizeof(sortable_bbox));
     printf("Sorting %d boxes...\n", N);
     for(i = 0; i < N; ++i){
@@ -266,14 +266,14 @@ void BattleRoyaleWithCheese(char *filename, char *weightfile)
     srand(time(0));
     set_batch_network(&net, 1);
 
-    list *plist = get_paths("data/compare.sort.list");
-    //list *plist = get_paths("data/compare.small.list");
-    //list *plist = get_paths("data/compare.cat.list");
-    //list *plist = get_paths("data/compare.val.old");
-    char **paths = (char **)list_to_array(plist);
-    int N = plist->size;
+    darknet_list *pdarknet_list = get_paths("data/compare.sort.darknet_list");
+    //darknet_list *pdarknet_list = get_paths("data/compare.small.darknet_list");
+    //darknet_list *pdarknet_list = get_paths("data/compare.cat.darknet_list");
+    //darknet_list *pdarknet_list = get_paths("data/compare.val.old");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    int N = pdarknet_list->size;
     int total = N;
-    free_list(plist);
+    free_darknet_list(pdarknet_list);
     sortable_bbox *boxes = calloc(N, sizeof(sortable_bbox));
     printf("Battling %d boxes...\n", N);
     for(i = 0; i < N; ++i){

@@ -2,7 +2,7 @@
 #define UTILS_H
 #include <stdio.h>
 #include <time.h>
-#include "list.h"
+#include "darknet_list.h"
 
 #define SECRET_NUM -1234
 #define TWO_PI 6.2831853071795864769252866
@@ -27,9 +27,9 @@ void file_error(char *s);
 void strip(char *s);
 void strip_char(char *s, char bad);
 void top_k(float *a, int n, int k, int *index);
-list *split_str(char *s, char delim);
+darknet_list *split_str(char *s, char delim);
 char *fgetl(FILE *fp);
-list *parse_csv_line(char *line);
+darknet_list *parse_csv_line(char *line);
 char *copy_string(char *s);
 int count_fields(char *line);
 float *parse_fields(char *line, int n);

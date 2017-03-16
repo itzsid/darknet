@@ -19,14 +19,14 @@ void train_dice(char *cfgfile, char *weightfile)
     int imgs = 1024;
     int i = *net.seen/imgs;
     char **labels = dice_labels;
-    list *plist = get_paths("data/dice/dice.train.list");
-    char **paths = (char **)list_to_array(plist);
-    printf("%d\n", plist->size);
+    darknet_list *pdarknet_list = get_paths("data/dice/dice.train.darknet_list");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    printf("%d\n", pdarknet_list->size);
     clock_t time;
     while(1){
         ++i;
         time=clock();
-        data train = load_data_old(paths, imgs, plist->size, labels, 6, net.w, net.h);
+        data train = load_data_old(paths, imgs, pdarknet_list->size, labels, 6, net.w, net.h);
         printf("Loaded: %lf seconds\n", sec(clock()-time));
 
         time=clock();
@@ -53,11 +53,11 @@ void validate_dice(char *filename, char *weightfile)
     srand(time(0));
 
     char **labels = dice_labels;
-    list *plist = get_paths("data/dice/dice.val.list");
+    darknet_list *pdarknet_list = get_paths("data/dice/dice.val.darknet_list");
 
-    char **paths = (char **)list_to_array(plist);
-    int m = plist->size;
-    free_list(plist);
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    int m = pdarknet_list->size;
+    free_darknet_list(pdarknet_list);
 
     data val = load_data_old(paths, m, 0, labels, 6, net.w, net.h);
     float *acc = network_accuracies(net, val, 2);

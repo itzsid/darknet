@@ -1,7 +1,7 @@
 #include "network.h"
 #include "utils.h"
 #include "parser.h"
-#include "option_list.h"
+#include "option_darknet_list.h"
 #include "blas.h"
 
 #ifdef OPENCV
@@ -465,18 +465,18 @@ void engine_go(char *filename, char *weightfile, int multi)
                     !strcmp(comm, "name") || 
                     !strcmp(comm, "version") || 
                     !strcmp(comm, "known_command") || 
-                    !strcmp(comm, "list_commands") || 
+                    !strcmp(comm, "darknet_list_commands") || 
                     !strcmp(comm, "quit") || 
                     !strcmp(comm, "boardsize") || 
                     !strcmp(comm, "clear_board") || 
                     !strcmp(comm, "komi") || 
-                    !strcmp(comm, "final_status_list") || 
+                    !strcmp(comm, "final_status_darknet_list") || 
                     !strcmp(comm, "play") || 
                     !strcmp(comm, "genmove"));
             if(known) printf("=%s true\n\n", ids);
             else printf("=%s false\n\n", ids);
-        } else if (!strcmp(buff, "list_commands")){
-            printf("=%s protocol_version\nname\nversion\nknown_command\nlist_commands\nquit\nboardsize\nclear_board\nkomi\nplay\ngenmove\nfinal_status_list\n\n", ids);
+        } else if (!strcmp(buff, "darknet_list_commands")){
+            printf("=%s protocol_version\nname\nversion\nknown_command\ndarknet_list_commands\nquit\nboardsize\nclear_board\nkomi\nplay\ngenmove\nfinal_status_darknet_list\n\n", ids);
         } else if (!strcmp(buff, "quit")){
             break;
         } else if (!strcmp(buff, "boardsize")){
@@ -555,7 +555,7 @@ void engine_go(char *filename, char *weightfile, int multi)
 
         } else if (!strcmp(buff, "p")){
             //print_board(board, 1, 0);
-        } else if (!strcmp(buff, "final_status_list")){
+        } else if (!strcmp(buff, "final_status_darknet_list")){
             char type[256];
             scanf("%s", type);
             fprintf(stderr, "final_status\n");
@@ -574,7 +574,7 @@ void engine_go(char *filename, char *weightfile, int multi)
                         if(board[j*19 + i]) ++count;
                     }
                 }
-                fprintf(f, "final_status_list dead\n");
+                fprintf(f, "final_status_darknet_list dead\n");
                 fclose(f);
                 FILE *p = popen("./gnugo --mode gtp < game.txt", "r");
                 for(i = 0; i < count; ++i){

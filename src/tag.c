@@ -20,10 +20,10 @@ void train_tag(char *cfgfile, char *weightfile, int clear)
     if(clear) *net.seen = 0;
     printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
     int imgs = 1024;
-    list *plist = get_paths("/home/pjreddie/tag/train.list");
-    char **paths = (char **)list_to_array(plist);
-    printf("%d\n", plist->size);
-    int N = plist->size;
+    darknet_list *pdarknet_list = get_paths("/home/pjreddie/tag/train.darknet_list");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
+    printf("%d\n", pdarknet_list->size);
+    int N = pdarknet_list->size;
     clock_t time;
     pthread_t load_thread;
     data train;
@@ -85,8 +85,8 @@ void train_tag(char *cfgfile, char *weightfile, int clear)
     pthread_join(load_thread, 0);
     free_data(buffer);
     free_network(net);
-    free_ptrs((void**)paths, plist->size);
-    free_list(plist);
+    free_ptrs((void**)paths, pdarknet_list->size);
+    free_darknet_list(pdarknet_list);
     free(base);
 }
 

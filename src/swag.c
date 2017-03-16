@@ -32,16 +32,16 @@ void train_swag(char *cfgfile, char *weightfile)
     int classes = l.classes;
     float jitter = l.jitter;
 
-    list *plist = get_paths(train_images);
-    //int N = plist->size;
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(train_images);
+    //int N = pdarknet_list->size;
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     load_args args = {0};
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
     args.n = imgs;
-    args.m = plist->size;
+    args.m = pdarknet_list->size;
     args.classes = classes;
     args.jitter = jitter;
     args.num_boxes = side;

@@ -4,11 +4,11 @@
 #include "utils.h"
 #include "data.h"
 
-void change_leaves(tree *t, char *leaf_list)
+void change_leaves(tree *t, char *leaf_darknet_list)
 {
-    list *llist = get_paths(leaf_list);
-    char **leaves = (char **)list_to_array(llist);
-    int n = llist->size;
+    darknet_list *ldarknet_list = get_paths(leaf_darknet_list);
+    char **leaves = (char **)darknet_list_to_array(ldarknet_list);
+    int n = ldarknet_list->size;
     int i,j;
     int found = 0;
     for(i = 0; i < t->n; ++i){

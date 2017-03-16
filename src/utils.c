@@ -206,16 +206,16 @@ void file_error(char *s)
     exit(0);
 }
 
-list *split_str(char *s, char delim)
+darknet_list *split_str(char *s, char delim)
 {
     size_t i;
     size_t len = strlen(s);
-    list *l = make_list();
-    list_insert(l, s);
+    darknet_list *l = make_darknet_list();
+    darknet_list_insert(l, s);
     for(i = 0; i < len; ++i){
         if(s[i] == delim){
             s[i] = '\0';
-            list_insert(l, &(s[i+1]));
+            darknet_list_insert(l, &(s[i+1]));
         }
     }
     return l;
@@ -349,20 +349,20 @@ char *copy_string(char *s)
     return copy;
 }
 
-list *parse_csv_line(char *line)
+darknet_list *parse_csv_line(char *line)
 {
-    list *l = make_list();
+    darknet_list *l = make_darknet_list();
     char *c, *p;
     int in = 0;
     for(c = line, p = line; *c != '\0'; ++c){
         if(*c == '"') in = !in;
         else if(*c == ',' && !in){
             *c = '\0';
-            list_insert(l, copy_string(p));
+            darknet_list_insert(l, copy_string(p));
             p = c+1;
         }
     }
-    list_insert(l, copy_string(p));
+    darknet_list_insert(l, copy_string(p));
     return l;
 }
 

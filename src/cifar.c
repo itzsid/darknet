@@ -1,7 +1,7 @@
 #include "network.h"
 #include "utils.h"
 #include "parser.h"
-#include "option_list.h"
+#include "option_darknet_list.h"
 #include "blas.h"
 
 #ifdef OPENCV

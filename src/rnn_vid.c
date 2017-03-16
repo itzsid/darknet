@@ -89,9 +89,9 @@ void train_vid_rnn(char *cfgfile, char *weightfile)
     int imgs = net.batch*net.subdivisions;
     int i = *net.seen/imgs;
 
-    list *plist = get_paths(train_videos);
-    int N = plist->size;
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(train_videos);
+    int N = pdarknet_list->size;
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
     clock_t time;
     int steps = net.time_steps;
     int batch = net.batch / net.time_steps;

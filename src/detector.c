@@ -5,7 +5,7 @@
 #include "parser.h"
 #include "box.h"
 #include "demo.h"
-#include "option_list.h"
+#include "option_darknet_list.h"
 
 #ifdef OPENCV
 #include "opencv2/highgui/highgui_c.h"
@@ -14,8 +14,8 @@ static int coco_ids[] = {1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,2
 
 void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, int ngpus, int clear)
 {
-    list *options = read_data_cfg(datacfg);
-    char *train_images = option_find_str(options, "train", "data/train.list");
+    darknet_list *options = read_data_cfg(datacfg);
+    char *train_images = option_find_str(options, "train", "data/train.darknet_list");
     char *backup_directory = option_find_str(options, "backup", "/backup/");
 
     srand(time(0));
@@ -51,16 +51,16 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
     int classes = l.classes;
     float jitter = l.jitter;
 
-    list *plist = get_paths(train_images);
-    //int N = plist->size;
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(train_images);
+    //int N = pdarknet_list->size;
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     load_args args = {0};
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
     args.n = imgs;
-    args.m = plist->size;
+    args.m = pdarknet_list->size;
     args.classes = classes;
     args.jitter = jitter;
     args.num_boxes = l.max_boxes;
@@ -234,11 +234,11 @@ void print_imagenet_detections(FILE *fp, int id, box *boxes, float **probs, int 
 void validate_detector(char *datacfg, char *cfgfile, char *weightfile, char *outfile)
 {
     int j;
-    list *options = read_data_cfg(datacfg);
-    char *valid_images = option_find_str(options, "valid", "data/train.list");
-    char *name_list = option_find_str(options, "names", "data/names.list");
+    darknet_list *options = read_data_cfg(datacfg);
+    char *valid_images = option_find_str(options, "valid", "data/train.darknet_list");
+    char *name_darknet_list = option_find_str(options, "names", "data/names.darknet_list");
     char *prefix = option_find_str(options, "results", "results");
-    char **names = get_labels(name_list);
+    char **names = get_labels(name_darknet_list);
     char *mapf = option_find_str(options, "map", 0);
     int *map = 0;
     if (mapf) map = read_map(mapf);
@@ -251,8 +251,8 @@ void validate_detector(char *datacfg, char *cfgfile, char *weightfile, char *out
     fprintf(stderr, "Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
     srand(time(0));
 
-    list *plist = get_paths(valid_images);
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(valid_images);
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     layer l = net.layers[net.n-1];
     int classes = l.classes;
@@ -289,7 +289,7 @@ void validate_detector(char *datacfg, char *cfgfile, char *weightfile, char *out
     float **probs = calloc(l.w*l.h*l.n, sizeof(float *));
     for(j = 0; j < l.w*l.h*l.n; ++j) probs[j] = calloc(classes, sizeof(float *));
 
-    int m = plist->size;
+    int m = pdarknet_list->size;
     int i=0;
     int t;
 
@@ -370,8 +370,8 @@ void validate_detector_recall(char *cfgfile, char *weightfile)
     fprintf(stderr, "Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
     srand(time(0));
 
-    list *plist = get_paths("data/voc.2007.test");
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths("data/voc.2007.test");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     layer l = net.layers[net.n-1];
     int classes = l.classes;
@@ -381,7 +381,7 @@ void validate_detector_recall(char *cfgfile, char *weightfile)
     float **probs = calloc(l.w*l.h*l.n, sizeof(float *));
     for(j = 0; j < l.w*l.h*l.n; ++j) probs[j] = calloc(classes, sizeof(float *));
 
-    int m = plist->size;
+    int m = pdarknet_list->size;
     int i=0;
 
     float thresh = .001;
@@ -440,9 +440,9 @@ void validate_detector_recall(char *cfgfile, char *weightfile)
 
 void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh)
 {
-    list *options = read_data_cfg(datacfg);
-    char *name_list = option_find_str(options, "names", "data/names.list");
-    char **names = get_labels(name_list);
+    darknet_list *options = read_data_cfg(datacfg);
+    char *name_darknet_list = option_find_str(options, "names", "data/names.darknet_list");
+    char **names = get_labels(name_darknet_list);
 
     image **alphabet = load_alphabet();
     network net = parse_network_cfg(cfgfile);
@@ -508,23 +508,23 @@ void run_detector(int argc, char **argv)
         fprintf(stderr, "usage: %s %s [train/test/valid] [cfg] [weights (optional)]\n", argv[0], argv[1]);
         return;
     }
-    char *gpu_list = find_char_arg(argc, argv, "-gpus", 0);
+    char *gpu_darknet_list = find_char_arg(argc, argv, "-gpus", 0);
     char *outfile = find_char_arg(argc, argv, "-out", 0);
     int *gpus = 0;
     int gpu = 0;
     int ngpus = 0;
-    if(gpu_list){
-        printf("%s\n", gpu_list);
-        int len = strlen(gpu_list);
+    if(gpu_darknet_list){
+        printf("%s\n", gpu_darknet_list);
+        int len = strlen(gpu_darknet_list);
         ngpus = 1;
         int i;
         for(i = 0; i < len; ++i){
-            if (gpu_list[i] == ',') ++ngpus;
+            if (gpu_darknet_list[i] == ',') ++ngpus;
         }
         gpus = calloc(ngpus, sizeof(int));
         for(i = 0; i < ngpus; ++i){
-            gpus[i] = atoi(gpu_list);
-            gpu_list = strchr(gpu_list, ',')+1;
+            gpus[i] = atoi(gpu_darknet_list);
+            gpu_darknet_list = strchr(gpu_darknet_list, ',')+1;
         }
     } else {
         gpu = gpu_index;
@@ -543,10 +543,10 @@ void run_detector(int argc, char **argv)
     else if(0==strcmp(argv[2], "valid")) validate_detector(datacfg, cfg, weights, outfile);
     else if(0==strcmp(argv[2], "recall")) validate_detector_recall(cfg, weights);
     else if(0==strcmp(argv[2], "demo")) {
-        list *options = read_data_cfg(datacfg);
+        darknet_list *options = read_data_cfg(datacfg);
         int classes = option_find_int(options, "classes", 20);
-        char *name_list = option_find_str(options, "names", "data/names.list");
-        char **names = get_labels(name_list);
+        char *name_darknet_list = option_find_str(options, "names", "data/names.darknet_list");
+        char **names = get_labels(name_darknet_list);
         demo(cfg, weights, thresh, cam_index, filename, names, classes, frame_skip, prefix, hier_thresh);
     }
 }

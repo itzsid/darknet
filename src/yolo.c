@@ -36,16 +36,16 @@ void train_yolo(char *cfgfile, char *weightfile)
     int classes = l.classes;
     float jitter = l.jitter;
 
-    list *plist = get_paths(train_images);
-    //int N = plist->size;
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(train_images);
+    //int N = pdarknet_list->size;
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     load_args args = {0};
     args.w = net.w;
     args.h = net.h;
     args.paths = paths;
     args.n = imgs;
-    args.m = plist->size;
+    args.m = pdarknet_list->size;
     args.classes = classes;
     args.jitter = jitter;
     args.num_boxes = side;
@@ -119,10 +119,10 @@ void validate_yolo(char *cfgfile, char *weightfile)
     srand(time(0));
 
     char *base = "results/comp4_det_test_";
-    //list *plist = get_paths("data/voc.2007.test");
-    list *plist = get_paths("/home/pjreddie/data/voc/2007_test.txt");
-    //list *plist = get_paths("data/voc.2012.test");
-    char **paths = (char **)list_to_array(plist);
+    //darknet_list *pdarknet_list = get_paths("data/voc.2007.test");
+    darknet_list *pdarknet_list = get_paths("/home/pjreddie/data/voc/2007_test.txt");
+    //darknet_list *pdarknet_list = get_paths("data/voc.2012.test");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     layer l = net.layers[net.n-1];
     int classes = l.classes;
@@ -138,7 +138,7 @@ void validate_yolo(char *cfgfile, char *weightfile)
     float **probs = calloc(l.side*l.side*l.n, sizeof(float *));
     for(j = 0; j < l.side*l.side*l.n; ++j) probs[j] = calloc(classes, sizeof(float *));
 
-    int m = plist->size;
+    int m = pdarknet_list->size;
     int i=0;
     int t;
 
@@ -207,8 +207,8 @@ void validate_yolo_recall(char *cfgfile, char *weightfile)
     srand(time(0));
 
     char *base = "results/comp4_det_test_";
-    list *plist = get_paths("data/voc.2007.test");
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths("data/voc.2007.test");
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     layer l = net.layers[net.n-1];
     int classes = l.classes;
@@ -225,7 +225,7 @@ void validate_yolo_recall(char *cfgfile, char *weightfile)
     float **probs = calloc(side*side*l.n, sizeof(float *));
     for(j = 0; j < side*side*l.n; ++j) probs[j] = calloc(classes, sizeof(float *));
 
-    int m = plist->size;
+    int m = pdarknet_list->size;
     int i=0;
 
     float thresh = .001;

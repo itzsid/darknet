@@ -1498,7 +1498,7 @@ typedef struct
 static int stbi__build_huffman(stbi__huffman *h, int *count)
 {
    int i,j,k=0,code;
-   // build size list for each symbol (from JPEG spec)
+   // build size darknet_list for each symbol (from JPEG spec)
    for (i=0; i < 16; ++i)
       for (j=0; j < count[i]; ++j)
          h->size[k++] = (stbi_uc) (i+1);
@@ -3466,7 +3466,7 @@ stbi_inline static int stbi__bit_reverse(int v, int bits)
    return stbi__bitreverse16(v) >> (16-bits);
 }
 
-static int stbi__zbuild_huffman(stbi__zhuffman *z, stbi_uc *sizelist, int num)
+static int stbi__zbuild_huffman(stbi__zhuffman *z, stbi_uc *sizedarknet_list, int num)
 {
    int i,k=0;
    int code, next_code[16], sizes[17];
@@ -3475,7 +3475,7 @@ static int stbi__zbuild_huffman(stbi__zhuffman *z, stbi_uc *sizelist, int num)
    memset(sizes, 0, sizeof(sizes));
    memset(z->fast, 0, sizeof(z->fast));
    for (i=0; i < num; ++i)
-      ++sizes[sizelist[i]];
+      ++sizes[sizedarknet_list[i]];
    sizes[0] = 0;
    for (i=1; i < 16; ++i)
       if (sizes[i] > (1 << i))
@@ -3494,7 +3494,7 @@ static int stbi__zbuild_huffman(stbi__zhuffman *z, stbi_uc *sizelist, int num)
    }
    z->maxcode[16] = 0x10000; // sentinel
    for (i=0; i < num; ++i) {
-      int s = sizelist[i];
+      int s = sizedarknet_list[i];
       if (s) {
          int c = next_code[s] - z->firstcode[s] + z->firstsymbol[s];
          stbi__uint16 fastv = (stbi__uint16) ((s << 9) | i);
@@ -5524,7 +5524,7 @@ static void stbi__out_gif_code(stbi__gif *g, stbi__uint16 code)
 {
    stbi_uc *p, *c;
 
-   // recurse to decode the prefixes, since the linked-list is backwards,
+   // recurse to decode the prefixes, since the linked-darknet_list is backwards,
    // and working backwards through an interleaved image would be nasty
    if (g->codes[code].prefix >= 0)
       stbi__out_gif_code(g, g->codes[code].prefix);

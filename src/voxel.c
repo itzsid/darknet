@@ -46,7 +46,7 @@ void extract_voxel(char *lfile, char *rfile, char *prefix)
 
 void train_voxel(char *cfgfile, char *weightfile)
 {
-    char *train_images = "/data/imagenet/imagenet1k.train.list";
+    char *train_images = "/data/imagenet/imagenet1k.train.darknet_list";
     char *backup_directory = "/home/pjreddie/backup/";
     srand(time(0));
     char *base = basecfg(cfgfile);
@@ -62,9 +62,9 @@ void train_voxel(char *cfgfile, char *weightfile)
     data train, buffer;
 
 
-    list *plist = get_paths(train_images);
-    //int N = plist->size;
-    char **paths = (char **)list_to_array(plist);
+    darknet_list *pdarknet_list = get_paths(train_images);
+    //int N = pdarknet_list->size;
+    char **paths = (char **)darknet_list_to_array(pdarknet_list);
 
     load_args args = {0};
     args.w = net.w;
@@ -72,7 +72,7 @@ void train_voxel(char *cfgfile, char *weightfile)
     args.scale = 4;
     args.paths = paths;
     args.n = imgs;
-    args.m = plist->size;
+    args.m = pdarknet_list->size;
     args.d = &buffer;
     args.type = SUPER_DATA;
 
