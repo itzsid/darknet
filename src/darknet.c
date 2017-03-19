@@ -31,6 +31,7 @@ extern void run_cifar(int argc, char **argv);
 extern void run_go(int argc, char **argv);
 extern void run_art(int argc, char **argv);
 extern void run_super(int argc, char **argv);
+extern void train_yolo_v1v2(int argc, char **argv);
 
 void average(int argc, char *argv[])
 {
@@ -382,6 +383,8 @@ int main(int argc, char **argv)
         run_super(argc, argv);
     } else if (0 == strcmp(argv[1], "detector")){
         run_detector(argc, argv);
+    } else if (0 == strcmp(argv[1], "train")){
+        train_yolo_v1v2(argc, argv);
     } else if (0 == strcmp(argv[1], "detect")){
         float thresh = find_float_arg(argc, argv, "-thresh", .24);
         char *filename = (argc > 4) ? argv[4]: 0;
