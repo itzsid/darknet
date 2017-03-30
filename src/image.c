@@ -499,6 +499,13 @@ image load_image_cv(char *filename, int channels)
     return out;
 }
 
+image load_image_iplimage(IplImage* src)
+{
+    image out = ipl_to_image(src);
+    rgbgr_image(out);
+    return out;
+}
+
 image get_image_from_stream(CvCapture *cap)
 {
     IplImage* src = cvQueryFrame(cap);

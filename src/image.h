@@ -8,6 +8,12 @@
 #include <math.h>
 #include "box.h"
 
+
+#ifdef OPENCV
+#include "opencv2/highgui/highgui_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#endif
+
 typedef struct {
     int h;
     int w;
@@ -69,6 +75,7 @@ image make_random_image(int w, int h, int c);
 image make_empty_image(int w, int h, int c);
 image float_to_image(int w, int h, int c, float *data);
 image copy_image(image p);
+image load_image_iplimage(IplImage* src);
 image load_image(char *filename, int w, int h, int c);
 image load_image_color(char *filename, int w, int h);
 image **load_alphabet();

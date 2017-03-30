@@ -11,8 +11,10 @@
 
 /** @brief Test YOLO v1 network */
 void test_yolo_v1(network* net, char *filename, char** names, image** alphabet, char* output_file, float thresh, int visualize);
+void test_yolo_v1_data(network* net, IplImage* iplImage, char** names, image** alphabet, char* output_file, float thresh, int visualize);
 
 /** @brief Test YOLO v2 network */
 void test_yolo_v2(network* net, char *filename, char** names, image** alphabet, char* output_file, float thresh, int visualize);
+void test_yolo_v2_data(network* net, IplImage* iplImage, char** names, image** alphabet, char* output_file, float thresh, int visualize);
 
 #endif
