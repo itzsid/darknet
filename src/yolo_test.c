@@ -226,7 +226,6 @@ void test_yolo_v2(network* net, char *filename, char** names, image** alphabet, 
 
                 int num_vertices = 4; // four corners
                 fprintf(fout_box, " %d %d %d %d %d %d %d %d %d\n", num_vertices, left, top, right, top, right, bot, left, bot);
-                printf("[YOLO] %d %d %d %d %d %d\n", ibox, num_vertices, left, top, right, bot);
 
         }
         fclose(fout_box);
@@ -308,7 +307,6 @@ void test_yolo_v2_data(network* net, IplImage* iplImage, char** names, image** a
 
                 int num_vertices = 4; // four corners
                 fprintf(fout_box, " %d %d %d %d %d %d %d %d %d\n", num_vertices, left, top, right, top, right, bot, left, bot);
-                printf("[YOLO] %d %d %d %d %d %d\n", ibox, num_vertices, left, top, right, bot);
 
         }
         fclose(fout_box);
